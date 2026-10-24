@@ -1,0 +1,19 @@
+{
+  "name": "nodeone",
+  "version": "1.0.0",
+  "description": "proyecto de prueba mesa de ayuda vivero",
+  "keywords": [
+    "ADSO",
+    "TOOLS"
+  ],
+  "license": "ISC",
+  "author": "YEISON SALCEDO",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.3.0"
+  }
+}
