@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Monitoreo y Mesa de Ayuda - Vivero Las Dalias (SENA)</title>
+    <!-- Estilos CSS integrados para proyecto SENA -->
+    <style>
+        :root {
+            --verde-sena: #39A900;
+            --verde-oscuro: #1b5e20;
+            --verde-hoja: #2e7d32;
+            --verde-suave: #e8f5e9;
+            --cafe-tierra: #5d4037;
+            --cafe-claro: #8d6e63;
+            --naranja-alerta: #e65100;
+            --rojo-alerta: #c62828;
+            --amarillo-alerta: #f57f17;
+            --gris-fondo: #f4f6f4;
+            --blanco: #ffffff;
+            --texto: #263238;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--gris-fondo);
+            color: var(--texto);
+            line-height: 1.5;
+        }
+
+        /* Banner Institucional SENA */
+        .sena-banner {
+            background-color: #003049;
+            color: var(--blanco);
+            padding: 8px 15px;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            border-bottom: 3px solid var(--verde-sena);
+        }
+
+        .sena-badge {
+            background-color: var(--verde-sena);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        /* Encabezado Principal */
+        header {
+            background: linear-gradient(135deg, var(--verde-oscuro), var(--verde-hoja));
+            color: var(--blanco);
+            padding: 20px 15px;
+            text-align: center;
+            border-bottom: 5px solid var(--cafe-tierra);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.95;
+        }
+
+        /* Contenedor Principal */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        /* Ficha Informativa del Aprendiz */
+        .info-ficha {
+            background-color: var(--verde-suave);
+            border-left: 5px solid var(--verde-sena);
+            padding: 12px 18px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.92rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .info-ficha strong {
+            color: var(--verde-oscuro);
+        }
+
+        /* Tarjetas de Indicadores KPI */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .kpi-card {
+            background-color: var(--blanco);
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            border-top: 4px solid var(--verde-sena);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .kpi-card.alerta-riego { border-top-color: #0288d1; }
+        .kpi-card.alerta-plaga { border-top-color: var(--rojo-alerta); }
+        .kpi-card.alerta-nutri { border-top-color: var(--amarillo-alerta); }
+
+        .kpi-info h3 {
+            font-size: 0.85rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-info .number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--texto);
+        }
+
+        .kpi-icon {
+            font-size: 2.2rem;
+        }
+
+        /* Navegación por pestañas simples */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ccc;
+        }
+
+        .tab-btn {
+            background-color: #e0e0e0;
+            color: var(--texto);
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background-color: var(--verde-sena);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Tarjetas de Sección */
+        .card {
+            background-color: var(--blanco);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-top: 4px solid var(--verde-sena);
+        }
+
+        .card h2 {
+            color: var(--verde-oscuro);
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Formularios */
+        .form-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--cafe-tierra);
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--verde-sena);
+            box-shadow: 0 0 5px rgba(57, 169, 0, 0.3);
+        }
+
+        /* Botones */
+        .btn {
+            background-color: var(--verde-sena);
+            color: var(--blanco);
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .btn:hover { background-color: #2e8b00; }
+        .btn:active { transform: scale(0.98); }
+        .btn-secundario { background-color: var(--cafe-tierra); }
+        .btn-secundario:hover { background-color: #4e342e; }
+        .btn-sm { padding: 4px 8px; font-size: 0.8rem; }
+
+        /* Mensajes de Alerta */
+        .alert-box {
+            display: none;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .alert-exito { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+
+        /* Tablas */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f1f8e9;
+            color: var(--verde-oscuro);
+            font-weight: bold;
+        }
+
+        tr:hover { background-color: #f9f9f9; }
+
+        /* Badges de Estado */
+        .badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.78rem;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .badge-saludable { background-color: #d4edda; color: #155724; }
+        .badge-riego { background-color: #e1f5fe; color: #0277bd; }
+        .badge-plaga { background-color: #ffebee; color: #c62828; }
+        .badge-nutrientes { background-color: #fff8e1; color: #f57f17; }
+
+        .badge-pendiente { background-color: #fff3cd; color: #856404; }
+        .badge-proceso { background-color: #cce5ff; color: #004085; }
+        .badge-resuelto { background-color: #d4edda; color: #155724; }
+
+        /* Pie de Página */
+        footer {
+            background-color: var(--cafe-tierra);
+            color: var(--blanco);
+            padding: 20px 15px;
+            text-align: center;
+            margin-top: 40px;
+            border-top: 5px solid var(--verde-sena);
+        }
+
+        footer p { margin-bottom: 5px; font-size: 0.88rem; }
+        footer .sena-info { color: #a5d6a7; font-size: 0.82rem; }
+    </style>
+</head>
+<body>
+
+    <!-- Banner Institucional SENA -->
+    <div class="sena-banner">
+        <div>
+            <span class="sena-badge">SENA</span> Servicio Nacional de Aprendizaje | Centro Agropecuario
+        </div>
+        <div>
+            Proyecto Formativo SENA
+        </div>
+    </div>
+
+    <!-- Encabezado Principal -->
+    <header>
+        <h1>🌱 Vivero Las Dalias</h1>
+        <p>Sistema de Monitoreo Agrotécnico y Mesa de Ayuda Técnica</p>
+    </header>
+
+    <div class="container">
+
+        <!-- Ficha Informativa del Aprendiz SENA -->
+        <div class="info-ficha">
+            <div>
+                <strong>Aprendiz SENA:</strong> Yeison Alexander Anacona Galindez <br>
+                <strong>Programa:</strong> ADSO / Gestión Agrícola
+            </div>
+            <div>
+                <strong>Número de Ficha:</strong> 2721456 <br>
+                <strong>Proyecto:</strong> Sistema Web de Gestión Agrótecnica y Soporte
+            </div>
+        </div>
+
+        <!-- Indicadores KPI -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-info">
+                    <h3>Total Plantas</h3>
+                    <div class="number" id="kpiTotal">0</div>
+                </div>
+                <div class="kpi-icon">🪴</div>
+            </div>
+            <div class="kpi-card alerta-riego">
+                <div class="kpi-info">
+                    <h3>Requieren Riego</h3>
+                    <div class="number" id="kpiRiego">0</div>
+                </div>
+                <div class="kpi-icon">💧</div>
+            </div>
+            <div class="kpi-card alerta-plaga">
+                <div class="kpi-info">
+                    <h3>Plagas Detectadas</h3>
+                    <div class="number" id="kpiPlaga">0</div>
+                </div>
+                <div class="kpi-icon">🐛</div>
+            </div>
+            <div class="kpi-card alerta-nutri">
+                <div class="kpi-info">
+                    <h3>Faltan Nutrientes</h3>
+                    <div class="number" id="kpiNutrientes">0</div>
+                </div>
+                <div class="kpi-icon">🧪</div>
+            </div>
+        </div>
+
+        <!-- Pestañas de Navegación -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="cambiarPestana('monitoreo')">🌿 Monitoreo de Plantas</button>
+            <button class="tab-btn" onclick="cambiarPestana('mesadeayuda')">🎫 Mesa de Ayuda Técnica</button>
+        </div>
+
+        <!-- PESTAÑA 1: MONITOREO DE PLANTAS -->
+        <div id="monitoreo" class="tab-content active">
+            <!-- Formulario para Registrar / Monitorear Planta -->
+            <div class="card">
+                <h2>📝 Registrar y Monitorear Planta en Lote</h2>
+                <form id="plantForm" onsubmit="registrarPlanta(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="plantaNombre">Nombre / Especie de Planta: *</label>
+                            <input type="text" id="plantaNombre" class="form-control" placeholder="Ej: Dalia Cactus, Rosa, Orquídea" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="plantaTipo">Tipo de Planta: *</label>
+                            <select id="plantaTipo" class="form-control" required>
+                                <option value="Floral">Floral</option>
+                                <option value="Ornamental">Ornamental</option>
+                                <option value="Frutal">Frutal</option>
+                                <option value="Medicinal">Medicinal</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="plantaUbicacion">Ubicación / Lote: *</label>
+                            <select id="plantaUbicacion" class="form-control" required>
+                                <option value="Lote 1 - Invernadero">Lote 1 - Invernadero</option>
+                                <option value="Lote 2 - Vivero Exterior">Lote 2 - Vivero Exterior</option>
+                                <option value="Cama de Germinación">Cama de Germinación</option>
+                                <option value="Lote 3 - Sombra">Lote 3 - Sombra</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="plantaAgua">Cantidad de Agua Requerida: *</label>
+                            <input type="text" id="plantaAgua" class="form-control" placeholder="Ej: 500ml / 2 días" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="plantaFertilizante">Frecuencia / Tipo de Fertilizante: *</label>
+                            <input type="text" id="plantaFertilizante" class="form-control" placeholder="Ej: NPK 10-30-10 quincenal" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="plantaEstado">Estado Fitosanitario actual: *</label>
+                            <select id="plantaEstado" class="form-control" required>
+                                <option value="Saludable">🟢 Saludable</option>
+                                <option value="Requiere Riego">💧 Requiere Riego</option>
+                                <option value="Plaga Detectada">🐛 Plaga Detectada</option>
+                                <option value="Faltan Nutrientes">🧪 Faltan Nutrientes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn">🌱 Registrar Planta en Monitoreo</button>
+                </form>
+                <div id="alertaPlanta" class="alert-box alert-exito"></div>
+            </div>
+
+            <!-- Tabla de Plantas Monitoreadas -->
+            <div class="card">
+                <h2>📊 Inventario y Control Agrotécnico de Plantas</h2>
+                <p style="font-size: 0.88rem; color: #666; margin-bottom: 12px;">Puede cambiar directamente el estado o actualizar el registro de riego/fertilización desde las acciones de la tabla.</p>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Especie / Nombre</th>
+                                <th>Tipo</th>
+                                <th>Ubicación / Lote</th>
+                                <th>Riego Requerido</th>
+                                <th>Fertilización</th>
+                                <th>Estado Fitosanitario</th>
+                                <th>Acciones Agrotécnicas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaPlantasBody">
+                            <!-- Datos insertados vía JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- PESTAÑA 2: MESA DE AYUDA TÉCNICO-AGRÍCOLA -->
+        <div id="mesadeayuda" class="tab-content">
+            <!-- Formulario de Ticket -->
+            <div class="card">
+                <h2>🎫 Crear Ticket de Soporte Técnico / Agrícola</h2>
+                <p style="font-size: 0.88rem; color: #666; margin-bottom: 12px;">Reporte fallas técnicas en sistemas de riego, solicitudes urgentes de fertilización o control de plagas en lotes.</p>
+
+                <form id="ticketForm" onsubmit="crearTicket(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ticketSolicitante">Nombre del Solicitante / Encargado: *</label>
+                            <input type="text" id="ticketSolicitante" class="form-control" placeholder="Ej: Carlos - Operador Lote 1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ticketTipo">Tipo de Incidencia / Solicitud: *</label>
+                            <select id="ticketTipo" class="form-control" required>
+                                <option value="Falla en Sistema de Riego">💦 Falla en Sistema de Riego</option>
+                                <option value="Ataque Grave de Plaga">🐛 Ataque Grave de Plaga</option>
+                                <option value="Solicitud de Fertilizante Especial">🧪 Solicitud de Fertilizante Especial</option>
+                                <option value="Mantenimiento de Invernadero">🛠️ Mantenimiento de Invernadero</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ticketPrioridad">Prioridad: *</label>
+                            <select id="ticketPrioridad" class="form-control" required>
+                                <option value="Baja">Baja</option>
+                                <option value="Media" selected>Media</option>
+                                <option value="Alta">Alta (Urgente)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ticketDescripcion">Descripción detallada del problema: *</label>
+                        <textarea id="ticketDescripcion" class="form-control" rows="3" placeholder="Describa la anomalía observada en las plantas o sistemas..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-secundario">📨 Generar Ticket de Soporte</button>
+                </form>
+
+                <div id="alertaTicket" class="alert-box alert-exito"></div>
+            </div>
+
+            <!-- Tabla de Tickets Registrados -->
+            <div class="card">
+                <h2>📋 Control de Tickets de Soporte Agrícola</h2>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>N° Ticket</th>
+                                <th>Solicitante</th>
+                                <th>Tipo de Incidencia</th>
+                                <th>Prioridad</th>
+                                <th>Estado del Ticket</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaTicketsBody">
+                            <!-- Datos insertados vía JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Pie de Página -->
+    <footer>
+        <p><strong>Vivero Las Dalias - Sistema de Monitoreo Agrotécnico</strong></p>
+        <p class="sena-info">Proyecto Formativo Aprendiz SENA: <strong>Yeison Alexander Anacona Galindez</strong> | Programa: ADSO / Gestión Agrícola</p>
+        <p class="sena-info">Ficha: <strong>2721456</strong> | Centro Agropecuario SENA</p>
+    </footer>
+
+    <!-- Lógica JavaScript -->
+    <script>
+        // Array de datos predeterminados de plantas (Dalias y otras)
+        let plantas = [
+            { id: 1, nombre: "Dalia Cactus 'Fuego'", tipo: "Floral", ubicacion: "Lote 1 - Invernadero", agua: "600ml / 2 días", fertilizante: "NPK 10-30-10 Quincenal", estado: "Saludable" },
+            { id: 2, nombre: "Dalia Pompon Amarilla", tipo: "Floral", ubicacion: "Lote 1 - Invernadero", agua: "500ml / diario", fertilizante: "Humus de Lombriz Semanal", estado: "Requiere Riego" },
+            { id: 3, nombre: "Orquídea Phalaenopsis", type: "Ornamental", tipo: "Ornamental", ubicacion: "Lote 3 - Sombra", agua: "200ml / 5 días", fertilizante: "Abono foliar mensual", estado: "Plaga Detectada" },
+            { id: 4, nombre: "Rosa Amarilla de Corte", tipo: "Floral", ubicacion: "Lote 2 - Vivero Exterior", agua: "800ml / 2 días", fertilizante: "NPK 15-15-15 Quincenal", estado: "Faltan Nutrientes" },
+            { id: 5, nombre: "Menta Piperita", tipo: "Medicinal", ubicacion: "Cama de Germinación", agua: "300ml / diario", fertilizante: "Compost orgánico", estado: "Saludable" }
+        ];
+
+        // Array de tickets iniciales
+        let tickets = [
+            { id: "TIK-101", solicitante: "Carlos Ruiz", tipo: "Falla en Sistema de Riego", prioridad: "Alta", estado: "En Proceso" },
+            { id: "TIK-102", solicitante: "Ana Morales", tipo: "Ataque Grave de Plaga", prioridad: "Media", estado: "Resuelto" },
+            { id: "TIK-103", solicitante: "Yeison Anacona", tipo: "Solicitud de Fertilizante Especial", prioridad: "Baja", estado: "Pendiente" }
+        ];
+
+        let contadorTicket = 104;
+
+        // Inicialización al cargar la página
+        window.onload = function() {
+            renderizarPlantas();
+            renderizarTickets();
+            actualizarKPIs();
+        };
+
+        // Cambio de Pestañas
+        function cambiarPestana(idTab) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(idTab).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Renderizar Tabla de Plantas
+        function renderizarPlantas() {
+            const tbody = document.getElementById('tablaPlantasBody');
+            tbody.innerHTML = '';
+
+            plantas.forEach((p, index) => {
+                let badgeClase = "badge-saludable";
+                if(p.estado === "Requiere Riego") badgeClase = "badge-riego";
+                if(p.estado === "Plaga Detectada") badgeClase = "badge-plaga";
+                if(p.estado === "Faltan Nutrientes") badgeClase = "badge-nutrientes";
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${p.nombre}</strong></td>
+                        <td>${p.tipo}</td>
+                        <td>${p.ubicacion}</td>
+                        <td>${p.agua}</td>
+                        <td>${p.fertilizante}</td>
+                        <td><span class="badge ${badgeClase}">${p.estado}</span></td>
+                        <td>
+                            <select onchange="cambiarEstadoPlanta(${index}, this.value)" class="form-control" style="padding: 2px 5px; font-size: 0.8rem;">
+                                <option value="">-- Cambiar Estado --</option>
+                                <option value="Saludable">🟢 Saludable</option>
+                                <option value="Requiere Riego">💧 Requiere Riego</option>
+                                <option value="Plaga Detectada">🐛 Plaga Detectada</option>
+                                <option value="Faltan Nutrientes">🧪 Faltan Nutrientes</option>
+                            </select>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Registrar Nueva Planta
+        function registrarPlanta(event) {
+            event.preventDefault();
+
+            const nuevaPlanta = {
+                id: plantas.length + 1,
+                nombre: document.getElementById('plantaNombre').value,
+                tipo: document.getElementById('plantaTipo').value,
+                ubicacion: document.getElementById('plantaUbicacion').value,
+                agua: document.getElementById('plantaAgua').value,
+                fertilizante: document.getElementById('plantaFertilizante').value,
+                estado: document.getElementById('plantaEstado').value
+            };
+
+            plantas.push(nuevaPlanta);
+            renderizarPlantas();
+            actualizarKPIs();
+
+            const alerta = document.getElementById('alertaPlanta');
+            alerta.style.display = 'block';
+            alerta.innerHTML = `✅ Planta <strong>${nuevaPlanta.nombre}</strong> registrada correctamente en el sistema de monitoreo.`;
+
+            document.getElementById('plantForm').reset();
+            setTimeout(() => alerta.style.display = 'none', 4000);
+        }
+
+        // Cambiar Estado de una Planta
+        function cambiarEstadoPlanta(index, nuevoEstado) {
+            if(!nuevoEstado) return;
+            plantas[index].estado = nuevoEstado;
+            renderizarPlantas();
+            actualizarKPIs();
+        }
+
+        // Actualizar Indicadores KPI
+        function actualizarKPIs() {
+            document.getElementById('kpiTotal').innerText = plantas.length;
+            document.getElementById('kpiRiego').innerText = plantas.filter(p => p.estado === 'Requiere Riego').length;
+            document.getElementById('kpiPlaga').innerText = plantas.filter(p => p.estado === 'Plaga Detectada').length;
+            document.getElementById('kpiNutrientes').innerText = plantas.filter(p => p.estado === 'Faltan Nutrientes').length;
+        }
+
+        // Renderizar Tabla de Tickets
+        function renderizarTickets() {
+            const tbody = document.getElementById('tablaTicketsBody');
+            tbody.innerHTML = '';
+
+            tickets.forEach((t, index) => {
+                let badgeEstado = "badge-pendiente";
+                if(t.estado === "En Proceso") badgeEstado = "badge-proceso";
+                if(t.estado === "Resuelto") badgeEstado = "badge-resuelto";
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${t.id}</strong></td>
+                        <td>${t.solicitante}</td>
+                        <td>${t.tipo}</td>
+                        <td><strong>${t.prioridad}</strong></td>
+                        <td><span class="badge ${badgeEstado}">${t.estado}</span></td>
+                        <td>
+                            <button onclick="resolverTicket(${index})" class="btn btn-sm" style="background-color: var(--cafe-tierra);">Avanzar Estado</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Crear Nuevo Ticket de Mesa de Ayuda
+        function crearTicket(event) {
+            event.preventDefault();
+
+            const codTicket = "TIK-" + contadorTicket++;
+            const nuevoTicket = {
+                id: codTicket,
+                solicitante: document.getElementById('ticketSolicitante').value,
+                tipo: document.getElementById('ticketTipo').value,
+                prioridad: document.getElementById('ticketPrioridad').value,
+                estado: "Pendiente"
+            };
+
+            tickets.unshift(nuevoTicket);
+            renderizarTickets();
+
+            const alerta = document.getElementById('alertaTicket');
+            alerta.style.display = 'block';
+            alerta.innerHTML = `🎫 Ticket <strong>${codTicket}</strong> generado exitosamente para <em>${nuevoTicket.solicitante}</em>.`;
+
+            document.getElementById('ticketForm').reset();
+            setTimeout(() => alerta.style.display = 'none', 4000);
+        }
+
+        // Avanzar/Resolver Ticket
+        function resolverTicket(index) {
+            if(tickets[index].estado === "Pendiente") {
+                tickets[index].estado = "En Proceso";
+            } else if(tickets[index].estado === "En Proceso") {
+                tickets[index].estado = "Resuelto";
+            }
+            renderizarTickets();
+        }
+    </script>
+</body>
+</html>
